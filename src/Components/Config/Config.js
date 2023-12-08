@@ -68,6 +68,7 @@ export default function Config({ data, setData }) {
     const [currentMenu, setCurrentMenu] = useState(configMenuItems[0].key)
     const [config, setConfig] = useState(defaultConfig)
     const [loading, setLoading] = useState(false)
+    const [disableMenu, setDisableMenu] = useState(false)
 
     const onChangeMenu = (value) => {
         setCurrentMenu(value.key)
@@ -111,6 +112,7 @@ export default function Config({ data, setData }) {
                 selectedKeys={currentMenu}
                 mode="horizontal"
                 items={configMenuItems}
+                disabled={disableMenu}
                 style={{
                     width: '100%'
                 }}
@@ -120,7 +122,7 @@ export default function Config({ data, setData }) {
                 width: '100%'
             }}>
                 <SettingPanel active={currentMenu === configMenuItems[0].key} config={config} setConfig={setConfig} />
-                <DataPanel active={currentMenu === configMenuItems[1].key} config={config} setConfig={setConfig} data={data} setData={setData} />
+                <DataPanel active={currentMenu === configMenuItems[1].key} data={data} setData={setData} setDisableMenu={setDisableMenu} />
                 <ExportPanel active={currentMenu === configMenuItems[2].key} config={config} setConfig={setConfig} data={data} />
                 <ImportPanel active={currentMenu === configMenuItems[3].key} config={config} setConfig={setConfig} setData={setData} />
                 <AdvancedPanel active={currentMenu === configMenuItems[4].key} config={config} setConfig={setConfig} />

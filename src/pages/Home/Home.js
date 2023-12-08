@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Config from "../../Components/Config/Config";
-import Graph from "../../Components/Graph/Graph";
 import Layout from "../../Components/Layout/Layout";
+import GraphView from "../../Components/Graph/GraphView";
 
 export default function Home() {
 
@@ -15,7 +15,7 @@ export default function Home() {
     return (
         <Layout>
             <Config data={data} setData={setData} />
-            <Graph data={data} />
+            <GraphView data={data} />
         </Layout>
     )
 }

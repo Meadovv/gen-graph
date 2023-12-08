@@ -1,4 +1,4 @@
-export default function Graph() {
+export default function GraphView() {
 
     return (
         <div style={{
@@ -9,7 +9,7 @@ export default function Graph() {
             borderRadius: 10,
             border: '1px solid black'
         }}>
-            
+
         </div>
     )
 }
