@@ -2,15 +2,13 @@ import { Menu, Space, Button } from 'antd'
 import {
     SettingOutlined,
     DatabaseOutlined,
-    DownloadOutlined,
-    UploadOutlined,
+    FolderAddOutlined,
     AppstoreOutlined
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SettingPanel from './Panel/SettingPanel'
 import DataPanel from './Panel/DataPanel'
-import ExportPanel from './Panel/ExportPanel'
-import ImportPanel from './Panel/ImportPanel'
+import FilePanel from './Panel/FilePanel'
 import AdvancedPanel from './Panel/AdvancedPanel'
 
 function shuffle(array) {
@@ -40,14 +38,9 @@ const configMenuItems = [
         icon: <DatabaseOutlined />
     },
     {
-        label: 'Export',
-        key: 'export',
-        icon: <DownloadOutlined />
-    },
-    {
-        label: 'Import',
-        key: 'import',
-        icon: <UploadOutlined />
+        label: 'File',
+        key: 'file',
+        icon: <FolderAddOutlined />
     },
     {
         label: 'Advanced',
@@ -66,9 +59,9 @@ const defaultConfig = {
 export default function Config({ data, setData }) {
 
     const [currentMenu, setCurrentMenu] = useState(configMenuItems[0].key)
-    const [config, setConfig] = useState(defaultConfig)
     const [loading, setLoading] = useState(false)
     const [disableMenu, setDisableMenu] = useState(false)
+    const [config, setConfig] = useState(defaultConfig)
 
     const onChangeMenu = (value) => {
         setCurrentMenu(value.key)
@@ -91,7 +84,8 @@ export default function Config({ data, setData }) {
         tempEdges = shuffle(tempEdges)
         edges.push({
             numNode: config.num_node,
-            numEdge: config.num_edge
+            numEdge: config.num_edge,
+            graph_mode: config.graph_mode
         })
         for (let i = 1; i <= config.num_edge; ++i) {
             edges.push(tempEdges[i]);
@@ -100,6 +94,10 @@ export default function Config({ data, setData }) {
         setLoading(false)
         setCurrentMenu(configMenuItems[1].key)
     }
+
+    useEffect(() => {
+        data[0].graph_mode = config.graph_mode
+    }, [config])
 
     return (
         <div style={{
@@ -122,14 +120,13 @@ export default function Config({ data, setData }) {
                 width: '100%'
             }}>
                 <SettingPanel active={currentMenu === configMenuItems[0].key} config={config} setConfig={setConfig} />
-                <DataPanel active={currentMenu === configMenuItems[1].key} data={data} setData={setData} setDisableMenu={setDisableMenu} />
-                <ExportPanel active={currentMenu === configMenuItems[2].key} config={config} setConfig={setConfig} data={data} />
-                <ImportPanel active={currentMenu === configMenuItems[3].key} config={config} setConfig={setConfig} setData={setData} />
-                <AdvancedPanel active={currentMenu === configMenuItems[4].key} config={config} setConfig={setConfig} />
+                <DataPanel active={currentMenu === configMenuItems[1].key} config={config} data={data} setData={setData} setDisableMenu={setDisableMenu} />
+                <FilePanel active={currentMenu === configMenuItems[2].key} setData={setData} />
+                <AdvancedPanel active={currentMenu === configMenuItems[3].key} config={config} setConfig={setConfig} />
             </div>
             <Space style={{ display: currentMenu === configMenuItems[0].key ? '' : 'none' }}>
-                <Button type='primary' size='large' ghost onClick={() => { setConfig(defaultConfig) }}>Reset</Button>
-                <Button loading={loading} type='primary' size='large' ghost danger onClick={Generate}>Generate</Button>
+                <Button type='primary' size='large' onClick={() => { setConfig(defaultConfig) }}>Reset</Button>
+                <Button loading={loading} type='primary' size='large' danger onClick={Generate}>Generate</Button>
             </Space>
         </div>
     )

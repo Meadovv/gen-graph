@@ -8,7 +8,8 @@ export default function Home() {
     const [data, setData] = useState([
         {
             numNode: 0,
-            numEdge: 0
+            numEdge: 0,
+            graph_mode: 'undirected'
         }
     ])
 
