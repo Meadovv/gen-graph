@@ -100,8 +100,6 @@ export default function AdvancedPanel({ data, active }) {
                     currentNode = parent.get(currentNode)
                 }
 
-                console.log(trace)
-
                 while(trace.length > 0) {
                     text = text + ` > ${trace[trace.length - 1]}`
                     trace.pop()
@@ -123,7 +121,61 @@ export default function AdvancedPanel({ data, active }) {
     }
 
     const FloydWarshall = () => {
+        let distance = []
+        let parent = []
+        for(let i = 0; i <= data[0].numNode; ++i) {
+            distance.push([])
+            parent.push([])
+            for(let j = 0; j <= data[0].numNode; ++j) {
+                distance[i].push(i === j ? 0 : 1000000)
+                parent[i].push(0)
+            }
+        }
 
+        for(let i = 1; i < data.length; ++i) {
+            distance[data[i].from][data[i].to] = data[i].weight
+            parent[data[i].from][data[i].to] = data[i].to
+            if(data[0].graph_mode === 'undirected') {
+                distance[data[i].to][data[i].from] = data[i].weight
+                parent[data[i].to][data[i].from] = data[i].from
+            }
+        }
+        
+
+        for(let k = 1; k <= data[0].numNode; ++k)
+        for(let i = 1; i <= data[0].numNode; ++i)
+        for(let j = 1; j <= data[0].numNode; ++j)
+        if(distance[i][j] > distance[i][k] + distance[k][j]) {
+            distance[i][j] = distance[i][k] + distance[k][j]
+            parent[i][j] = parent[i][k]
+        }
+
+        let collapseTemp = []
+
+        for(let i = 1; i < distance[source].length; ++i) {
+            if(distance[i] > 100000) {
+                collapseTemp.push({
+                    key: i,
+                    label: `There is no path from Node ${source} to Node ${i}`,
+                    children: null
+                })
+            } else {
+
+                let text = `Path: `
+                for(let tmp = source; tmp !== i; tmp = parent[tmp][i]) {
+                    text = text + ` ${tmp} > `
+                }
+                text = text + `${i}`
+
+                collapseTemp.push({
+                    key: i,
+                    label: `Distance from Node ${source} to Node ${i} is ${distance[source][i]}`,
+                    children: text
+                })
+            }
+        }
+
+        setCollapseItem(collapseTemp)
     }
 
     const executeAlgorithm = () => {

@@ -1,4 +1,5 @@
 export default function Header () {
+
     return (
         <div style={{
             display: 'flex',
@@ -6,8 +7,9 @@ export default function Header () {
             padding: 10
         }}>
             <div style={{
-                display: 'flex'
-            }}>
+                display: 'flex',
+                cursor: 'pointer'
+            }} onClick={() => {window.location.reload()}}>
                 <img alt='logo' src='/images/logo.png' style={{
                     height: '5vh'
                 }}/>
