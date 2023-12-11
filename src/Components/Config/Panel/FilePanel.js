@@ -5,7 +5,7 @@ import {
     CloseCircleOutlined
 } from '@ant-design/icons'
 import {
-    Space, Button, Modal, Form, Radio, Upload, Input, message
+    Space, Button, Modal, Radio, Upload, message
 } from 'antd'
 import { useState } from 'react'
 
@@ -15,7 +15,7 @@ function ImportModal({ open, onCancel, importData }) {
         graph_mode: 'undirected',
         fileName: 'no_file',
         file: '',
-        data_type: 'wm'
+        data_format: 'wm'
     }
 
     const [data, setData] = useState(defaultData)
@@ -81,11 +81,11 @@ function ImportModal({ open, onCancel, importData }) {
                     <div style={{
                         marginRight: 20,
                         fontWeight: 'bold'
-                    }}>Data Type: </div>
-                    <Radio.Group value={data.data_type} onChange={(event) => {
+                    }}>Data Format: </div>
+                    <Radio.Group value={data.data_format} onChange={(event) => {
                         setData({
                             ...data,
-                            data_type: event.target.value
+                            data_format: event.target.value
                         })
                     }}>
                         <Radio value='wm'>Weight Matrix</Radio>
@@ -130,27 +130,118 @@ function ImportModal({ open, onCancel, importData }) {
     )
 }
 
-export default function FilePanel({ setData, active }) {
+export default function FilePanel({ data, setData, active }) {
 
     const [openModal, setOpenModal] = useState(false)
 
     const importData = (values) => {
-        console.log(values)
+        const edgeMap = new Map()
+        let dataArray = []
+        let flag = true
+        let numNode, numEdge, numItem = 0;
+        const textDataArray = values.file.split(/[^\d]+/)
+        for (let i = 0; i < textDataArray.length; ++i) {
+            if (textDataArray[i] === '') continue
+            if (isNaN(Number(textDataArray[i]))) {
+                flag = false
+                continue
+            }
+            dataArray.push(Number(textDataArray[i]))
+            if (i === 0) {
+                numNode = Number(textDataArray[i])
+                continue
+            }
+            if (i === 1) {
+                if (values.data_format === 'al') {
+                    numEdge = Number(textDataArray[i])
+                    continue
+                }
+            }
+            numItem = numItem + 1
+        }
+
+        if (values.data_format === 'wm') {
+            if (numNode * numNode !== numItem) {
+                flag = false
+            }
+        } else {
+            if (numEdge * 3 !== numItem) {
+                flag = false
+            }
+        }
+
+        let backupData = [{
+            numNode: Number(dataArray[0]),
+            numEdge: Number(dataArray[1]),
+            graph_mode: values.graph_mode
+        }]
+
+        if (values.data_format === 'al') {
+            for (let i = 2; i < dataArray.length; i = i + 3) {
+                if(values.graph_mode === 'directed') {
+                    if (edgeMap.get(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}`) !== undefined) flag = false
+                    else edgeMap.set(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}`, Number(dataArray[i + 2]))
+                } else {
+                    console.log(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`)
+                    if(edgeMap.get(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`) !== undefined) flag = false
+                    else edgeMap.set(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`, Number(dataArray[i + 2]))
+
+                }
+                backupData.push({
+                    from: Number(dataArray[i]),
+                    to: Number(dataArray[i + 1]),
+                    weight: Number(dataArray[i + 2])
+                })
+            }
+        } else {
+            let row = 1, col = 1
+            for (let i = 1; i < dataArray.length; ++i) {
+                if (Number(dataArray[i]) > 0) {
+                    if (values.graph_mode === 'undirected') {
+                        edgeMap.set(`${col}-${row}`, Number(dataArray[i]))
+                        if (edgeMap.get(`${row}-${col}`) !== undefined && edgeMap.get(`${row}-${col}`) !== edgeMap.get(`${col}-${row}`)) flag = false
+                    }
+                    backupData.push({
+                        from: col,
+                        to: row,
+                        weight: Number(dataArray[i])
+                    })
+                }
+                row = row + 1
+                if (row === (backupData[0].numNode + 1)) {
+                    row = 1
+                    col = col + 1
+                }
+            }
+            backupData[0].numEdge = backupData.length - 1
+        }
+
+        if (flag) {
+            setData(backupData)
+            message.success('Import Completed!')
+        } else {
+            message.error('Import Failed!')
+        }
         setOpenModal(false)
     }
 
     const handleExport = () => {
+
+        const date = new Date()
+        const dateString = String(date.getDate()) + String(date.getMonth() + 1) + String(date.getFullYear())
+
         let fileContent = "data:text/txt;charset=utf-8,"
         const link = document.createElement('a')
         link.href = fileContent + localStorage.getItem('textData')
-        link.download = 'graph.txt'
+        link.download = `${localStorage.getItem('dataFormat') === 'al' ? 'adjacency-list' : 'weight-matrix'}-graph-${dateString}.txt`
         link.click()
     }
 
     return (
         <div style={{
             display: active ? 'flex' : 'none',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            marginTop: 10
         }}>
             <ImportModal
                 open={openModal}

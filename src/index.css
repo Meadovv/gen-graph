@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-#graph {
-  height: 600px;
+svg {
   width: 100%;
+  height: 100%;
 }

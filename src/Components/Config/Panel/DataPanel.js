@@ -2,13 +2,11 @@ import { Input, Button, Radio, Tooltip, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 
-export default function DataPanel({ config, active, data, setData, setDisableMenu }) {
+export default function DataPanel({ active, data, setData, setDisableMenu }) {
 
     const [textData, setTextData] = useState()
     const [enableEdit, setEnableEdit] = useState(false)
     const [dataFormat, setDataFormat] = useState('al')
-
-    const [graphMode, setGraphMode] = useState(config.graph_mode)
 
     useEffect(() => {
         handleDataChange()
@@ -37,7 +35,7 @@ export default function DataPanel({ config, active, data, setData, setDisableMen
             data.forEach((item, index) => {
                 if (!index) return
                 tempMatrix[item.from - 1][item.to - 1] = item.weight
-                if (graphMode === 'undirected') {
+                if (data[0].graph_mode === 'undirected') {
                     tempMatrix[item.to - 1][item.from - 1] = item.weight
                 }
             })
@@ -52,6 +50,7 @@ export default function DataPanel({ config, active, data, setData, setDisableMen
         }
         setTextData(tempData)
         localStorage.setItem('textData', tempData)
+        localStorage.setItem('dataFormat', dataFormat)
     }
 
     const checkTextData = () => {
@@ -93,13 +92,20 @@ export default function DataPanel({ config, active, data, setData, setDisableMen
         let backupData = [{
             numNode: Number(dataArray[0]),
             numEdge: Number(dataArray[1]),
-            graph_mode: graphMode
+            graph_mode: data[0].graph_mode
         }]
 
         if (dataFormat === 'al') {
             for (let i = 2; i < dataArray.length; i = i + 3) {
-                if (edgeMap.get(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}-${Number(dataArray[i + 2])}`) !== undefined) flag = false
-                else edgeMap.set(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}-${Number(dataArray[i + 2])}`, 1)
+                if(data[0].graph_mode === 'directed') {
+                    if (edgeMap.get(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}`) !== undefined) flag = false
+                    else edgeMap.set(`${Number(dataArray[i])}-${Number(dataArray[i + 1])}`, Number(dataArray[i + 2]))
+                } else {
+                    console.log(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`)
+                    if(edgeMap.get(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`) !== undefined) flag = false
+                    else edgeMap.set(`${Math.max(Number(dataArray[i]), Number(dataArray[i + 1]))}-${Math.min(Number(dataArray[i]), Number(dataArray[i + 1]))}`, Number(dataArray[i + 2]))
+
+                }
                 backupData.push({
                     from: Number(dataArray[i]),
                     to: Number(dataArray[i + 1]),
@@ -110,7 +116,7 @@ export default function DataPanel({ config, active, data, setData, setDisableMen
             let row = 1, col = 1
             for (let i = 1; i < dataArray.length; ++i) {
                 if (Number(dataArray[i]) > 0) {
-                    if (graphMode === 'undirected') {
+                    if (data[0].graph_mode === 'undirected') {
                         edgeMap.set(`${col}-${row}`, Number(dataArray[i]))
                         if (edgeMap.get(`${row}-${col}`) !== undefined && edgeMap.get(`${row}-${col}`) !== edgeMap.get(`${col}-${row}`)) flag = false
                     }
@@ -202,12 +208,9 @@ export default function DataPanel({ config, active, data, setData, setDisableMen
                 <div style={{ marginLeft: 10 }}>
                     Graph Mode
                 </div>
-                <Radio.Group value={graphMode} onChange={(event) => {
-                    setGraphMode(event.target.value)
-                }} disabled={!enableEdit}>
-                    <Radio value='undirected'>Undirected</Radio>
-                    <Radio value='directed'>Directed</Radio>
-                </Radio.Group>
+                <div>
+                    {data[0].graph_mode === 'undirected' ? 'Undirected' : 'Directed'}
+                </div>
             </div>
 
             <Input.TextArea

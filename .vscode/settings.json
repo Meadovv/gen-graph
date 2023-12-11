@@ -2,6 +2,8 @@
     "cSpell.words": [
         "antd",
         "Appstore",
-        "graphviz"
+        "graphviz",
+        "Pathfinding",
+        "Warshall"
     ]
 }

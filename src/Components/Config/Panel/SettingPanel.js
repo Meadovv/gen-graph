@@ -31,7 +31,7 @@ export default function SettingPanel({ config, setConfig, active }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={1000} value={config.num_node} onChange={(value) => {
+                <InputNumber size='large' min={0} max={30} value={config.num_node} onChange={(value) => {
                     setConfig({
                         ...config,
                         num_node: value

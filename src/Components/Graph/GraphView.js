@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 export default function GraphView({ data }) {
 
     const graphOptions = {
-        fit: true,
-        zoom: false,
+        fit: false,
+        zoom: true
     }
 
     const [dots, setDot] = useState(`graph {
@@ -25,6 +25,7 @@ export default function GraphView({ data }) {
     return (
         <div style={{
             display: 'flex',
+            justifyContent: 'center',
             height: '80vh',
             width: '60%',
             padding: 10,
@@ -33,7 +34,7 @@ export default function GraphView({ data }) {
         }}>
             <Graphviz
                 options={graphOptions} 
-                dot={dots} 
+                dot={dots}
             />
         </div>
     )

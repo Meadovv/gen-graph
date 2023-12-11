@@ -88,7 +88,7 @@ export default function Config({ data, setData }) {
             graph_mode: config.graph_mode
         })
         for (let i = 1; i <= config.num_edge; ++i) {
-            edges.push(tempEdges[i]);
+            edges.push(tempEdges[i - 1]);
         }
         setData(edges)
         setLoading(false)
@@ -120,9 +120,9 @@ export default function Config({ data, setData }) {
                 width: '100%'
             }}>
                 <SettingPanel active={currentMenu === configMenuItems[0].key} config={config} setConfig={setConfig} />
-                <DataPanel active={currentMenu === configMenuItems[1].key} config={config} data={data} setData={setData} setDisableMenu={setDisableMenu} />
-                <FilePanel active={currentMenu === configMenuItems[2].key} setData={setData} />
-                <AdvancedPanel active={currentMenu === configMenuItems[3].key} config={config} setConfig={setConfig} />
+                <DataPanel active={currentMenu === configMenuItems[1].key} data={data} setData={setData} setDisableMenu={setDisableMenu} />
+                <FilePanel active={currentMenu === configMenuItems[2].key} data={data} setData={setData} />
+                <AdvancedPanel active={currentMenu === configMenuItems[3].key} data={data} />
             </div>
             <Space style={{ display: currentMenu === configMenuItems[0].key ? '' : 'none' }}>
                 <Button type='primary' size='large' onClick={() => { setConfig(defaultConfig) }}>Reset</Button>
