@@ -14,9 +14,9 @@ export default function GraphView({ data }) {
     useEffect(() => {
         let edgeArray = ''
         for(let i = 1; i < data.length; ++i) {
-            edgeArray += `${data[i].from} -${data[0].graph_mode === 'undirected' ? '-' : '>'} ${data[i].to} [label = ${data[i].weight}, color = black];`
+            edgeArray += `${data[i].from} -${data[0].graphMode === 'undirected' ? '-' : '>'} ${data[i].to} [label = ${data[i].weight}, color = black];`
         }
-        let backupDots = `${data[0].graph_mode === 'undirected' ? 'graph' : 'digraph'} {
+        let backupDots = `${data[0].graphMode === 'undirected' ? 'graph' : 'digraph'} {
             ${edgeArray}
         }`
         setDot(backupDots)

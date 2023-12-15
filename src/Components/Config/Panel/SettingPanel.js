@@ -1,6 +1,12 @@
 import { Radio, InputNumber, Space, Slider } from 'antd'
 
-export default function SettingPanel({ config, setConfig, active }) {
+export default function SettingPanel({ data, setData, active }) {
+
+    const handleChangeSetting = (key, value) => {
+        let backupArray = [...data]
+        backupArray[0][key] = value
+        setData(backupArray)
+    }
 
     return (
         <Space style={{
@@ -13,11 +19,8 @@ export default function SettingPanel({ config, setConfig, active }) {
                 marginTop: 10
             }}>
                 <div>Graph Mode</div>
-                <Radio.Group value={config.graph_mode} onChange={(event) => {
-                    setConfig({
-                        ...config,
-                        graph_mode: event.target.value
-                    })
+                <Radio.Group value={data[0].graphMode} onChange={(event) => {
+                    handleChangeSetting('graphMode', event.target.value)
                 }}>
                     <Radio value='undirected'>Undirected</Radio>
                     <Radio value='directed'>Directed</Radio>
@@ -31,11 +34,8 @@ export default function SettingPanel({ config, setConfig, active }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={30} value={config.num_node} onChange={(value) => {
-                    setConfig({
-                        ...config,
-                        num_node: value
-                    })
+                <InputNumber size='large' min={0} max={30} value={data[0].numNode} onChange={(value) => {
+                    handleChangeSetting('numNode', value)
                 }}/>
             </div>
 
@@ -49,13 +49,10 @@ export default function SettingPanel({ config, setConfig, active }) {
                 <InputNumber 
                     size='large' 
                     min={1} 
-                    max={config.graph_mode === 'undirected' ? (config.num_node * (config.num_node - 1)) / 2 : (config.num_node * (config.num_node - 1))} 
-                    value={config.num_edge} 
+                    max={data[0].graphMode === 'undirected' ? (data[0].numNode * (data[0].numNode - 1)) / 2 : (data[0].numNode * (data[0].numNode - 1))} 
+                    value={data[0].numEdge} 
                     onChange={(value) => {
-                    setConfig({
-                        ...config,
-                        num_edge: value
-                    })
+                        handleChangeSetting('numEdge', value)
                 }}/>
             </div>
 
@@ -66,13 +63,10 @@ export default function SettingPanel({ config, setConfig, active }) {
                 marginTop: 10
             }}>
                 <div>Weight</div>
-                <Slider range min={1} max={20} value={config.weight} style={{
+                <Slider range min={1} max={20} value={data[0].weight} style={{
                     width: '50%'
                 }} onChange={(value) => {
-                    setConfig({
-                        ...config,
-                        weight: value
-                    })
+                    handleChangeSetting('weight', value)
                 }}/>
             </div>
         </Space>

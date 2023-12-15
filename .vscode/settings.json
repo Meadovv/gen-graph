@@ -2,8 +2,10 @@
     "cSpell.words": [
         "antd",
         "Appstore",
+        "fastapi",
         "graphviz",
         "Pathfinding",
+        "pydantic",
         "Warshall"
     ]
 }
