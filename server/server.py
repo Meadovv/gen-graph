@@ -2,7 +2,6 @@ import time
 import random
 import numpy
 
-from bs4 import BeautifulSoup
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -61,6 +60,8 @@ async def crawl(payload: Config):
         for i in range (0, payload.numEdge):
             graph.append(baseEdgeArray[i])
         
+        print(payload.numNode)
+
         return {
             "success": True,
             "graph": graph,
