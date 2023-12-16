@@ -3,20 +3,20 @@ import { useState } from 'react'
 import axios from 'axios';
 
 const defaultConfig = {
-    numNode: 6,
-    numEdge: 6,
+    numNode: 5,
+    numEdge: 5,
     weight: [5, 10],
     graphMode: 'undirected'
 }
 
-export default function ConfigPanel({ data, setData, active }) {
+export default function ConfigPanel({ setData, active }) {
 
     const [config, setConfig] = useState(defaultConfig)
     const [loading, setLoading] = useState(false)
 
-    const Generate = () => {
+    const Generate = async () => {
         setLoading(true)
-        axios.post(`${process.env.REACT_APP_SERVER_HOST}/graph/generate`,
+        await axios.post('/graph/generate',
             {
                 numNode: config.numNode,
                 numEdge: config.numEdge,
@@ -66,7 +66,7 @@ export default function ConfigPanel({ data, setData, active }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={500} value={config.numNode} onChange={(value) => {
+                <InputNumber size='large' min={0} max={1000} value={config.numNode} onChange={(value) => {
                     setConfig({
                         ...config,
                         numNode: value

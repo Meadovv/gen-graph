@@ -4,7 +4,9 @@ export default function Header () {
         <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            padding: 10
+            padding: 10,
+            zIndex: 1,
+            position: 'fixed'
         }}>
             <div style={{
                 display: 'flex',
@@ -13,23 +15,25 @@ export default function Header () {
                 <img alt='logo' src='/images/logo.png' style={{
                     height: '5vh'
                 }}/>
+            </div>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center'
+            }}>
                 <div style={{
-                    display: 'flex'
-                }}>
-                    <div style={{
-                        padding: 10,
-                        fontSize: 24,
-                        fontWeight: 'bold'
-                    }}>Graph</div>
-                    <div style={{
-                        padding: 10,
-                        backgroundColor: 'black',
-                        color: 'white',
-                        borderRadius: 10,
-                        fontSize: 24,
-                        fontWeight: 'bold'
-                    }}>Generator</div>
-                </div>
+                    padding: 2,
+                    color: '#00308F',
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold'
+                }}>Graph</div>
+                <div style={{
+                    padding: 5,
+                    borderRadius: 10,
+                    backgroundColor: '#00308F',
+                    color: 'white',
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold'
+                }}>Gen</div>
             </div>
         </div>
     )

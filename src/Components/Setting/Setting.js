@@ -4,14 +4,12 @@ import {
 import {
     SettingOutlined,
     DatabaseOutlined,
-    FolderAddOutlined,
-    AppstoreOutlined
+    FolderAddOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
 import ConfigPanel from './Panel/ConfigPanel'
 import DataPanel from './Panel/DataPanel'
 import FilePanel from './Panel/FilePanel'
-import AdvancedPanel from './Panel/AdvancedPanel'
 
 const configMenuItems = [
     {
@@ -28,11 +26,6 @@ const configMenuItems = [
         label: 'File',
         key: 'file',
         icon: <FolderAddOutlined />
-    },
-    {
-        label: 'Advanced',
-        key: 'advanced',
-        icon: <AppstoreOutlined />
     }
 ]
 
@@ -49,7 +42,7 @@ export default function Setting({ data, setData }) {
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '30%'
+            width: '100%'
         }}>
             <Menu
                 onClick={onChangeMenu}
@@ -65,10 +58,9 @@ export default function Setting({ data, setData }) {
                 padding: 10,
                 width: '100%'
             }}>
-                <ConfigPanel active={currentMenu === configMenuItems[0].key} data={data} setData={setData}/>
+                <ConfigPanel active={currentMenu === configMenuItems[0].key} setData={setData}/>
                 <DataPanel active={currentMenu === configMenuItems[1].key} data={data} setData={setData} setDisableMenu={setDisableMenu} />
                 <FilePanel active={currentMenu === configMenuItems[2].key} data={data} setData={setData} />
-                <AdvancedPanel active={currentMenu === configMenuItems[3].key} data={data} />
             </div>
         </div>
     )
