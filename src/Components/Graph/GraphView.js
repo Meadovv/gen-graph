@@ -1,19 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import { ForceGraph2D } from "react-force-graph";
+import { message } from 'antd'
 
 function findPointC(a, b, distance) {
   const xMid = (a.x + b.x) / 2, yMid = (a.y + b.y) / 2
   const dx = b.x - a.x, dy = b.y - a.y
   const lengthAB = Math.sqrt(dx * dx + dy * dy)
   const xC = xMid + (distance / lengthAB) * (b.y - a.y), yC = yMid - (distance / lengthAB) * (b.x - a.x)
-  return { 
+  return {
     x: xC,
-    y: yC 
+    y: yC
   }
 }
 
-export default function GraphView({ data }) {
+export default function GraphView({ data, algorithm, sourceNode, setSourceNode, result }) {
   const graphRef = useRef();
+
+  const [targetNode, setTargetNode] = useState(0)
+
+  const [clickCount, setClickCount] = useState(0)
+
+  useEffect(() => {
+    if(algorithm !== 'floyd') setTargetNode(0)
+  }, [sourceNode])
 
   const [graphData, setGraphData] = useState({
     nodes: [],
@@ -21,13 +30,13 @@ export default function GraphView({ data }) {
   })
 
   useEffect(() => {
-    let nodes = Array.from({length: data[0].numNode}, (_, index) => ({
+    let nodes = Array.from({ length: data[0].numNode }, (_, index) => ({
       id: index + 1,
       label: `${index + 1}`
     }))
     let links = []
     data.forEach((item, index) => {
-      if(!index) return
+      if (!index) return
       links.push({
         source: item.source,
         target: item.target,
@@ -46,9 +55,14 @@ export default function GraphView({ data }) {
   const nodeConfig = {
     nodeCanvasObject: (node, ctx, globalScale) => {
       // Draw a blue circle
-      ctx.fillStyle = "#00308F"
+      ctx.fillStyle = (
+        node.id === sourceNode ? "#006A4E" : 
+        (node.id === targetNode ? 
+          "#AA0000" : 
+          "#00308F")
+        )
       ctx.beginPath()
-      ctx.arc(node.x, node.y, 8, 0, 2 * Math.PI, false)
+      ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false)
       ctx.fill()
 
       // Draw the node label inside the circle
@@ -56,7 +70,13 @@ export default function GraphView({ data }) {
       ctx.fillStyle = "white"
       ctx.textAlign = "center"
       ctx.textBaseline = "middle"
-      ctx.fillText(node.label, node.x, node.y)
+      const label = (
+        node.id === sourceNode ? `Source (${node.label})` : 
+        (node.id === targetNode ? 
+          `Target (${node.label})` : 
+          `${node.label}`)
+        )
+      ctx.fillText(label, node.x, node.y)
     },
   }
 
@@ -65,22 +85,22 @@ export default function GraphView({ data }) {
 
       // Set the edge stroke style with the calculated color
       ctx.strokeStyle = '#72A0C1'
-    
+
       // Start the path
       ctx.beginPath()
 
 
-    
+
       // Draw the edge as a straight line between source and target nodes
       ctx.moveTo(edge.source.x, edge.source.y)
       ctx.lineTo(edge.target.x, edge.target.y)
-    
+
       // Set the edge width
       ctx.lineWidth = 1
-    
+
       // Close the path
       ctx.closePath()
-    
+
       // Stroke the path to draw the edge
       ctx.stroke()
 
@@ -89,7 +109,7 @@ export default function GraphView({ data }) {
       const angle = Math.atan2(edge.target.y - edge.source.y, edge.target.x - edge.source.x)
       const arrowX = edge.target.x - (arrowSize + spaceBetweenArrowAndNode) * Math.cos(angle)
       const arrowY = edge.target.y - (arrowSize + spaceBetweenArrowAndNode) * Math.sin(angle)
-      
+
       ctx.beginPath();
       ctx.moveTo(arrowX, arrowY);
       ctx.lineTo(
@@ -102,7 +122,7 @@ export default function GraphView({ data }) {
       );
       ctx.fillStyle = '#72A0C1'
 
-      if(data[0].graphMode === 'directed') ctx.fill()
+      if (data[0].graphMode === 'directed') ctx.fill()
 
       const c_prime = findPointC(edge.source, edge.target, 3)
 
@@ -111,7 +131,7 @@ export default function GraphView({ data }) {
       ctx.fillStyle = 'black' // adjust color as needed
       ctx.textAlign = 'center'
 
-    
+
       // Draw the edge label at the calculated position
       ctx.fillText(`${edge.weight}`, c_prime.x, c_prime.y)
 
@@ -131,8 +151,28 @@ export default function GraphView({ data }) {
       {...graphConfig}
       {...nodeConfig}
       {...linkConfig}
-      cooldownTicks={100}
+      cooldownTicks={0}
       onEngineStop={() => graphRef.current.zoomToFit(0, 50)}
+      onNodeClick={(node) => {
+        if(result) {
+          if(algorithm !== 'floyd') {
+            if(node.id === sourceNode) {
+              message.error('Unable to select node')
+            } else {
+              setTargetNode(node.id)
+            }
+          } else {
+            if(clickCount % 2 === 0) {
+              setSourceNode(node.id)
+            } else {
+              setTargetNode(node.id)
+            }
+            setClickCount(current => current + 1)
+          }
+        } else {
+          message.error('Execute Algorithm First')
+        }
+      }}
     />
   );
 }

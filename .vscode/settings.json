@@ -5,6 +5,7 @@
         "cooldown",
         "fastapi",
         "graphviz",
+        "heapify",
         "Pathfinding",
         "pydantic",
         "Warshall"

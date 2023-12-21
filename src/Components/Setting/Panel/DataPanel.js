@@ -13,26 +13,33 @@ export default function DataPanel({ active, data, setData, setDisableMenu }) {
   const [enableEdit, setEnableEdit] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const handleDataChange = () => {
     let textDataTemp = "";
     data.forEach((item, index) => {
-      if (!index) textDataTemp += item.numNode + " " + item.numEdge;
+      if (!index) textDataTemp += item.numNode + " " + item.numEdge + " " + (item.graphMode === 'directed' ? 1 : 0);
       else textDataTemp += item.source + " " + item.target + " " + item.weight;
       if (index !== data.length - 1) textDataTemp += "\n";
     });
+    localStorage.setItem('data', textDataTemp)
     setTextData(textDataTemp);
+    setDisableMenu(false);
+  };
+
+  useEffect(() => {
+    handleDataChange();
   }, [data]);
 
   const handleEditData = async () => {
     if (enableEdit) {
       setLoading(true);
       await axios
-        .post('/graph/check', {
+        .post("/graph/text-to-graph", {
           text: textData,
         })
         .then((res) => {
           if (res.data.success) {
             message.success(res.data.message);
+            setData(res.data.graph);
             setDisableMenu(!enableEdit);
             setEnableEdit((current) => !current);
           } else {
@@ -84,6 +91,10 @@ export default function DataPanel({ active, data, setData, setDisableMenu }) {
             display: enableEdit ? "" : "none",
             marginRight: 10,
           }}
+          onClick={() => {
+            handleDataChange();
+            setEnableEdit((current) => !current);
+          }}
         >
           Cancel
         </Button>
@@ -114,14 +125,16 @@ export default function DataPanel({ active, data, setData, setDisableMenu }) {
                 Data for a graph must comply with the following principles:
               </strong>
               <span>
-                1. The first line contains two integers <strong>n</strong> and{" "}
-                <strong>m</strong> which are the{" "}
-                <strong>number of vertices</strong> and{" "}
-                <strong>number of edges</strong> of the graph.
+                1. The first line contains three positive integers <strong>n, m</strong> and{" "}
+                <strong>p</strong> which are the{" "}
+                <strong>number of vertices</strong>, {" "}
+                <strong>number of edges</strong> and <strong>graph mode</strong>.{" "}
+                <strong>p = 0</strong> is <strong>undirected graph</strong>,{" "}
+                <strong>otherwise</strong> is <strong>directed graph</strong>
               </span>
               <span>
-                2. The next <strong>m</strong> lines, each line includes 3
-                integers <strong>u, v, c</strong> represent the edge connecting
+                2. The next <strong>m</strong> lines, each line includes 3 positive
+                integers <strong>u, v, c</strong> represent the edge <strong>connecting</strong>{" "}
                 vertex <strong>u</strong> with vertex <strong>v</strong> with
                 weight <strong>c</strong> on the graph.
               </span>

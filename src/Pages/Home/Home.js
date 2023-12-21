@@ -1,30 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Setting from "../../Components/Setting/Setting";
 import Layout from "../../Components/Layout/Layout";
 import GraphView from "../../Components/Graph/GraphView";
 import { FloatButton, Drawer } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
+import Modal from "./Modal";
 
 const defaultData = [
   {
-    numNode: 5,
-    numEdge: 5,
+    numNode: 0,
+    numEdge: 0,
     weight: [5, 10],
     graphMode: "undirected",
   },
 ];
+
+const algorithms = [
+  {
+      label: 'Bellman Ford',
+      value: 'bellman'
+  },
+  {
+      label: 'Dijkstra',
+      value: 'dijkstra'
+  },
+  {
+      label: 'Floyd Warshall',
+      value: 'floyd'
+  }
+]
 
 export default function Home() {
   const [data, setData] = useState(defaultData)
 
   const [openDrawer, setOpenDrawer] = useState(false)
 
+  const [sourceNode, setSourceNode] = useState(0)
+  const [result, setResult] = useState(null)
+  const [algorithm, setAlgorithm] = useState(algorithms[0].value)
+
   const closeDrawer = () => {
-      setOpenDrawer(false)
+    setOpenDrawer(false)
   }
+
+  useEffect(() => {
+    localStorage.clear()
+  }, [])
 
   return (
     <Layout>
+      <Modal 
+        data={data} 
+        sourceNode={sourceNode} 
+        setSourceNode={setSourceNode}
+        result={result}
+        setResult={setResult}
+        algorithm={algorithm}
+        setAlgorithm={setAlgorithm}
+      />
       <FloatButton
         icon={<SettingOutlined />}
         onClick={() => {
@@ -40,7 +73,12 @@ export default function Home() {
       >
         <Setting data={data} setData={setData} />
       </Drawer>
-      <GraphView data={data} />
+      <GraphView 
+        data={data} 
+        algorithm={algorithm} 
+        sourceNode={sourceNode} 
+        setSourceNode={setSourceNode}
+        result={result}/>
     </Layout>
   );
 }

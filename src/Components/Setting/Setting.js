@@ -55,7 +55,7 @@ export default function Setting({ data, setData }) {
                 }}
             />
             <div style={{
-                padding: 10,
+                padding: 5,
                 width: '100%'
             }}>
                 <ConfigPanel active={currentMenu === configMenuItems[0].key} setData={setData}/>
