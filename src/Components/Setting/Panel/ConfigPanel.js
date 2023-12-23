@@ -9,7 +9,7 @@ const defaultConfig = {
     graphMode: 'undirected'
 }
 
-export default function ConfigPanel({ setData, active }) {
+export default function ConfigPanel({ setData, active, setOpenDrawer }) {
 
     const [config, setConfig] = useState(defaultConfig)
     const [loading, setLoading] = useState(false)
@@ -26,6 +26,7 @@ export default function ConfigPanel({ setData, active }) {
                 if (res.data.success) {
                     setData(res.data.graph)
                     message.success(res.data.message)
+                    setOpenDrawer(false)
                 } else {
                     message.error(res.data.message)
                 }

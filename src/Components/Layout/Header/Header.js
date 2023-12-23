@@ -4,8 +4,8 @@ export default function Header () {
         <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            padding: 10,
             zIndex: 1,
+            padding: 10,
             position: 'fixed'
         }}>
             <div style={{

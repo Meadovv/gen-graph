@@ -29,7 +29,7 @@ const configMenuItems = [
     }
 ]
 
-export default function Setting({ data, setData }) {
+export default function Setting({ data, setData, setOpenDrawer }) {
 
     const [currentMenu, setCurrentMenu] = useState(configMenuItems[0].key)
     const [disableMenu, setDisableMenu] = useState(false)
@@ -58,7 +58,7 @@ export default function Setting({ data, setData }) {
                 padding: 5,
                 width: '100%'
             }}>
-                <ConfigPanel active={currentMenu === configMenuItems[0].key} setData={setData}/>
+                <ConfigPanel active={currentMenu === configMenuItems[0].key} setData={setData} setOpenDrawer={setOpenDrawer}/>
                 <DataPanel active={currentMenu === configMenuItems[1].key} data={data} setData={setData} setDisableMenu={setDisableMenu} />
                 <FilePanel active={currentMenu === configMenuItems[2].key} data={data} setData={setData} />
             </div>

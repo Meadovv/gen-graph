@@ -4,7 +4,7 @@ import Layout from "../../Components/Layout/Layout";
 import GraphView from "../../Components/Graph/GraphView";
 import { FloatButton, Drawer } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
-import Modal from "./Modal";
+import Popup from "./Popup/Popup";
 
 const defaultData = [
   {
@@ -32,11 +32,23 @@ const algorithms = [
 
 export default function Home() {
   const [data, setData] = useState(defaultData)
-
+  const [openModal, setOpenModal] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
 
+  const [traceInformation, setTraceInformation] = useState({
+    distance: 0,
+    node: [],
+    edge: []
+  })
+
   const [sourceNode, setSourceNode] = useState(0)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState({
+    algorithm: algorithms[0].value,
+    result: {
+      distance: [],
+      trace: []
+    }
+  })
   const [algorithm, setAlgorithm] = useState(algorithms[0].value)
 
   const closeDrawer = () => {
@@ -49,7 +61,9 @@ export default function Home() {
 
   return (
     <Layout>
-      <Modal 
+      <Popup 
+        openModal={openModal} 
+        setOpenModal={setOpenModal}
         data={data} 
         sourceNode={sourceNode} 
         setSourceNode={setSourceNode}
@@ -57,11 +71,16 @@ export default function Home() {
         setResult={setResult}
         algorithm={algorithm}
         setAlgorithm={setAlgorithm}
+        traceInformation={traceInformation}
+        setTraceInformation={setTraceInformation}
       />
       <FloatButton
         icon={<SettingOutlined />}
         onClick={() => {
           setOpenDrawer(true);
+        }}
+        style={{
+          display: openModal ? 'none' : ''
         }}
       />
       <Drawer
@@ -71,14 +90,16 @@ export default function Home() {
         onClose={closeDrawer}
         open={openDrawer}
       >
-        <Setting data={data} setData={setData} />
+        <Setting data={data} setData={setData} setOpenDrawer={setOpenDrawer} />
       </Drawer>
       <GraphView 
         data={data} 
-        algorithm={algorithm} 
         sourceNode={sourceNode} 
         setSourceNode={setSourceNode}
-        result={result}/>
+        result={result}
+        traceInformation={traceInformation}
+        setTraceInformation={setTraceInformation}
+        />
     </Layout>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ForceGraph2D } from "react-force-graph";
 import { message } from 'antd'
+import axios from 'axios'
 
 function findPointC(a, b, distance) {
   const xMid = (a.x + b.x) / 2, yMid = (a.y + b.y) / 2
@@ -13,16 +14,57 @@ function findPointC(a, b, distance) {
   }
 }
 
-export default function GraphView({ data, algorithm, sourceNode, setSourceNode, result }) {
+export default function GraphView({ data, sourceNode, setSourceNode, result, traceInformation, setTraceInformation }) {
   const graphRef = useRef();
 
   const [targetNode, setTargetNode] = useState(0)
 
   const [clickCount, setClickCount] = useState(0)
 
+  const getTrace = async () => {
+    if(!sourceNode || !targetNode) return
+    await axios.post('/graph/trace',
+    {
+      data: data,
+      result: result,
+      node: {
+        sourceNode: sourceNode,
+        targetNode: targetNode,
+      }
+    }).then(res => {
+      if(res.data.success) {
+        setTraceInformation({
+          distance: res.data.distance,
+          node: res.data.node,
+          edge: res.data.edge
+        })
+      } else {
+        message.error(res.data.message)
+        setTraceInformation({
+          distance: 0,
+          edge: [],
+          node: []
+        })
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
   useEffect(() => {
-    if(algorithm !== 'floyd') setTargetNode(0)
+    if(result.algorithm !== 'floyd') {
+      setTargetNode(0)
+      setTraceInformation({
+        distance: 0,
+        edge: [],
+        node: []
+      })
+    }
   }, [sourceNode])
+
+  useEffect(() => {
+    getTrace()
+  }, [sourceNode, targetNode])
 
   const [graphData, setGraphData] = useState({
     nodes: [],
@@ -38,6 +80,7 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
     data.forEach((item, index) => {
       if (!index) return
       links.push({
+        id: item.id,
         source: item.source,
         target: item.target,
         weight: item.weight
@@ -49,20 +92,28 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
       links: links
     }
 
+    setSourceNode(0)
+    setTargetNode(0)
     setGraphData(graphDataTemp)
   }, [data])
 
   const nodeConfig = {
     nodeCanvasObject: (node, ctx, globalScale) => {
       // Draw a blue circle
-      ctx.fillStyle = (
-        node.id === sourceNode ? "#006A4E" : 
-        (node.id === targetNode ? 
-          "#AA0000" : 
-          "#00308F")
-        )
+    
+      if(node.id !== sourceNode && node.id !== targetNode && traceInformation.node.indexOf(node.id) !==  -1) {
+        ctx.fillStyle = '#FF7F50'
+      } else {
+        ctx.fillStyle = (
+          node.id === sourceNode ? "#006A4E" : 
+          (node.id === targetNode ? 
+            "#AA0000" : 
+            "#00308F")
+          )
+      }
+
       ctx.beginPath()
-      ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false)
+      ctx.arc(node.x, node.y, 6, 0, 2 * Math.PI, false)
       ctx.fill()
 
       // Draw the node label inside the circle
@@ -70,12 +121,11 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
       ctx.fillStyle = "white"
       ctx.textAlign = "center"
       ctx.textBaseline = "middle"
-      const label = (
-        node.id === sourceNode ? `Source (${node.label})` : 
-        (node.id === targetNode ? 
-          `Target (${node.label})` : 
-          `${node.label}`)
-        )
+
+      const label = node.id === sourceNode ? `${node.id} (S)` :
+        node.id === targetNode ? `${node.id} (T)` :
+          traceInformation.node.indexOf(node.id) !== -1 ? `${node.id} (${traceInformation.node.indexOf(node.id) + 1})` : `${node.id}`
+
       ctx.fillText(label, node.x, node.y)
     },
   }
@@ -84,7 +134,7 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
     linkCanvasObject: (edge, ctx, globalScale) => {
 
       // Set the edge stroke style with the calculated color
-      ctx.strokeStyle = '#72A0C1'
+      ctx.strokeStyle = (traceInformation.edge.indexOf(edge.id) !== -1 ? '#FF4500' : '#72A0C1')
 
       // Start the path
       ctx.beginPath()
@@ -120,7 +170,7 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
         arrowX - arrowSize * Math.cos(angle + Math.PI / 6),
         arrowY - arrowSize * Math.sin(angle + Math.PI / 6)
       );
-      ctx.fillStyle = '#72A0C1'
+      ctx.fillStyle = (traceInformation.edge.indexOf(edge.id) !== -1 ? '#FF4500' : '#72A0C1')
 
       if (data[0].graphMode === 'directed') ctx.fill()
 
@@ -152,10 +202,10 @@ export default function GraphView({ data, algorithm, sourceNode, setSourceNode, 
       {...nodeConfig}
       {...linkConfig}
       cooldownTicks={0}
-      onEngineStop={() => graphRef.current.zoomToFit(0, 50)}
+      // onEngineStop={() => graphRef.current.zoomToFit(0, 50)}
       onNodeClick={(node) => {
-        if(result) {
-          if(algorithm !== 'floyd') {
+        if(result && sourceNode) {
+          if(result.algorithm !== 'floyd') {
             if(node.id === sourceNode) {
               message.error('Unable to select node')
             } else {

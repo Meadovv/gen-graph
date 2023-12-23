@@ -297,7 +297,7 @@ const pathfinding = (req, res) => {
     let dist = new Array(graphData[0].numNode)
     let parent = new Array(graphData[0].numNode)
     dist.fill(MAX)
-    parent.fill(0)
+    parent.fill(-1)
     dist[req.body.source - 1] = 0;
 
     const pq = new PriorityQueue()
@@ -328,6 +328,7 @@ const pathfinding = (req, res) => {
     return res.status(200).send({
       success: true,
       result: {
+        distance: dist,
         trace: parent,
       },
       message: 'Success!'
@@ -376,7 +377,7 @@ const pathfinding = (req, res) => {
     return res.status(200).send({
       success: true,
       result: {
-        matrix: matrix,
+        distance: matrix,
         trace: parent,
       },
       message: "Success!"
@@ -384,8 +385,60 @@ const pathfinding = (req, res) => {
   }
 }
 
+const tracePath = (req, res) => {
+  const algorithm = req.body.result.algorithm
+  const distance = req.body.result.result.distance
+  const parent = req.body.result.result.trace
+  const sourceNode = req.body.node.sourceNode - 1
+  const targetNode = req.body.node.targetNode - 1
+  const data = req.body.data
+
+  if(algorithm === 'dijkstra') {
+    if(distance[targetNode] === MAX) {
+      return res.status(200).send({
+        success: false,
+        message: 'NOT FOUND PATH'
+      })
+    } else {
+      let node = []
+      let currentNode = targetNode
+
+      while(currentNode !== -1) {
+        node.unshift(currentNode + 1)
+        currentNode = parent[currentNode]
+      }
+
+      const edgeMap = new Map()
+      for(let i = 0; i < node.length - 1; ++i) {
+        edgeMap.set(`${node[i]}-${node[i + 1]}`, 1)
+        if(data[0].graphMode === 'undirected') {
+          edgeMap.set(`${node[i + 1]}-${node[i]}`, 1)
+        }
+      }
+
+      let edge = []
+      for(let i = 1; i < data.length; ++i) {
+        if(edgeMap.get(`${data[i].source}-${data[i].target}`) !== undefined ) edge.push(data[i].id)
+      }
+
+      return res.status(200).send({
+        success: true,
+        distance: distance[targetNode],
+        node: node,
+        edge: edge
+      })
+    }
+  }
+
+  res.status(200).send({
+    success: false,
+    message: 'API WORK'
+  })
+}
+
 module.exports = {
   generate,
   textToGraph,
-  pathfinding
+  pathfinding,
+  tracePath
 };
