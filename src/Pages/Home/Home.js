@@ -42,6 +42,7 @@ export default function Home() {
   })
 
   const [sourceNode, setSourceNode] = useState(0)
+  const [targetNode, setTargetNode] = useState(0)
   const [result, setResult] = useState({
     algorithm: algorithms[0].value,
     result: {
@@ -56,6 +57,11 @@ export default function Home() {
   }
 
   useEffect(() => {
+    setSourceNode(0)
+    setTargetNode(0)
+  }, [algorithm])
+
+  useEffect(() => {
     localStorage.clear()
   }, [])
 
@@ -67,6 +73,8 @@ export default function Home() {
         data={data} 
         sourceNode={sourceNode} 
         setSourceNode={setSourceNode}
+        targetNode={targetNode}
+        setTargetNode={setTargetNode}
         result={result}
         setResult={setResult}
         algorithm={algorithm}
@@ -96,6 +104,8 @@ export default function Home() {
         data={data} 
         sourceNode={sourceNode} 
         setSourceNode={setSourceNode}
+        targetNode={targetNode}
+        setTargetNode={setTargetNode}
         result={result}
         traceInformation={traceInformation}
         setTraceInformation={setTraceInformation}

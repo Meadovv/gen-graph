@@ -4,7 +4,8 @@ const {
    generate,
    textToGraph,
    pathfinding,
-   tracePath
+   tracePath,
+   createFileContent
 } = require('../controller/graphCtrl')
 
 const router = express.Router()
@@ -16,5 +17,7 @@ router.post('/text-to-graph', textToGraph)
 router.post('/pathfinding', pathfinding)
 
 router.post('/trace', tracePath)
+
+router.post('/create-file', createFileContent)
 
 module.exports = router;

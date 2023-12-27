@@ -14,10 +14,8 @@ function findPointC(a, b, distance) {
   }
 }
 
-export default function GraphView({ data, sourceNode, setSourceNode, result, traceInformation, setTraceInformation }) {
+export default function GraphView({ data, sourceNode, setSourceNode, targetNode, setTargetNode, result, traceInformation, setTraceInformation }) {
   const graphRef = useRef();
-
-  const [targetNode, setTargetNode] = useState(0)
 
   const [clickCount, setClickCount] = useState(0)
 
@@ -52,7 +50,7 @@ export default function GraphView({ data, sourceNode, setSourceNode, result, tra
   }
 
   useEffect(() => {
-    if(result.algorithm !== 'floyd') {
+    if(result?.algorithm !== 'floyd') {
       setTargetNode(0)
       setTraceInformation({
         distance: 0,
@@ -155,7 +153,7 @@ export default function GraphView({ data, sourceNode, setSourceNode, result, tra
       ctx.stroke()
 
       const arrowSize = 6
-      const spaceBetweenArrowAndNode = 1
+      const spaceBetweenArrowAndNode = 0
       const angle = Math.atan2(edge.target.y - edge.source.y, edge.target.x - edge.source.x)
       const arrowX = edge.target.x - (arrowSize + spaceBetweenArrowAndNode) * Math.cos(angle)
       const arrowY = edge.target.y - (arrowSize + spaceBetweenArrowAndNode) * Math.sin(angle)
@@ -204,7 +202,7 @@ export default function GraphView({ data, sourceNode, setSourceNode, result, tra
       cooldownTicks={0}
       // onEngineStop={() => graphRef.current.zoomToFit(0, 50)}
       onNodeClick={(node) => {
-        if(result && sourceNode) {
+        if(result.result.distance.length) {
           if(result.algorithm !== 'floyd') {
             if(node.id === sourceNode) {
               message.error('Unable to select node')

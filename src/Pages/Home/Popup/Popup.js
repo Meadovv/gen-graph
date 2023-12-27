@@ -1,7 +1,7 @@
 // Popup.js
 import React, { useState, useEffect } from 'react';
 import { FloatButton, Menu, Select, InputNumber, Button, message } from 'antd'
-import { AimOutlined, SettingOutlined, DownloadOutlined } from '@ant-design/icons'
+import { AimOutlined, SettingOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons'
 import './Popup.css';
 import axios from 'axios'
 
@@ -15,6 +15,11 @@ const menuItems = [
     label: 'Result',
     key: 'result',
     icon: <AimOutlined />,
+  },
+  {
+    label: 'Find',
+    key: 'find',
+    icon: <SearchOutlined />,
   },
 ]
 
@@ -34,9 +39,15 @@ const algorithms = [
 ]
 
 
-const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, result, setResult, algorithm, setAlgorithm, traceInformation, setTraceInformation }) => {
+const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, targetNode, setTargetNode, result, setResult, algorithm, setAlgorithm, traceInformation, setTraceInformation }) => {
 
   const [currentMenu, setCurrentMenu] = useState(menuItems[0].key)
+  const [loading, setLoading] = useState(false)
+
+  const [temp, setTemp] = useState({
+    sourceNode: sourceNode,
+    targetNode: targetNode
+  })
 
   const [tracePath, setTracePath] = useState('')
   
@@ -45,7 +56,14 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
     for(let i = 0; i < traceInformation.node.length - 1; ++i) {
       temp = temp + traceInformation.node[i] + ' > '
     }
-    temp = temp + traceInformation.node[traceInformation.node.length - 1]
+    if(traceInformation.node.length > 0) {
+      temp = temp + traceInformation.node[traceInformation.node.length - 1]
+    }
+  
+    if(temp === '') {
+      temp = 'NO PATH'
+    }
+
     setTracePath(temp)
   }, [traceInformation])
 
@@ -65,6 +83,7 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
   }, [data, algorithm])
 
   const pathfinding = async () => {
+    setLoading(true)
     if (data.length < 2) {
       message.error('Generate Data First')
       return
@@ -90,6 +109,26 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
         console.log(err)
         message.error(err.message)
       })
+      setLoading(false)
+  }
+
+  const downloadResult = async () => {
+    await axios.post('/graph/create-file',
+    {
+      content: result.result.distance
+    }).then(res => {
+      if(res.data.success) {
+        message.success(res.data.message)
+        const link = document.createElement("a");
+        link.href = "data:text/txt;charset=utf-8," + res.data.content
+        link.download = `floyd-result-${Date.now()}.txt`;
+        link.click();
+      } else {
+        message.error(res.data.message)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
   return (
@@ -143,6 +182,10 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
                     />
                   </div>
                   <div style={{
+                    color: 'red',
+                    display: algorithm === algorithms[1].value ? 'flex' : 'none',
+                  }}>* Weight will be replaced by its absolute value.</div>
+                  <div style={{
                     display: algorithm === algorithms[2].value ? 'none' : 'flex',
                     alignItems: 'center',
                     marginTop: '1rem',
@@ -167,11 +210,12 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
                     marginTop: '1rem',
                     justifyContent: 'flex-end'
                   }}>
-                    <Button type='primary' size='large' onClick={pathfinding}>
-                      Find
+                    <Button type='primary' size='large' onClick={pathfinding} loading={loading}>
+                      Execute
                     </Button>
                   </div>
                 </div> :
+                currentMenu === menuItems[1].key ?
                 <div style={{
                   marginTop: 10
                 }}>
@@ -192,16 +236,74 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, resul
                           type='primary'
                           icon={<DownloadOutlined />}
                           size='large'
-                          onClick={() => {
-                            const link = document.createElement("a");
-                            link.href = "data:text/txt;charset=utf-8," + result.distance
-                            link.download = `floyd-result-${Date.now()}.txt`;
-                            link.click();
-                          }}
+                          onClick={downloadResult}
                         >Download Result</Button>
                         <div className='note'>* Available in Floyd Warshall Algorithm</div>
                       </div> : <></>
                   }
+                </div> :
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginTop: 10
+                }}>
+                  <div style={{
+                    display: result.algorithm !== 'floyd' ? 'none' : 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}>
+                    <div>Source Node:</div>
+                    <InputNumber
+                      style={{
+                        width: '12rem',
+
+                      }}
+                      onChange={(value) => {
+                        setTemp({
+                          ...temp,
+                          sourceNode: value
+                        })
+                      }}
+                    />
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    justifyContent: 'space-between',
+                    width: '100%'
+                  }}>
+                    <div>Target Node:</div>
+                    <InputNumber
+                      style={{
+                        width: '12rem'
+                      }}
+                      onChange={(value) => {
+                        setTemp({
+                          ...temp,
+                          targetNode: value
+                        })
+                      }}
+                    />
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    justifyContent: 'flex-end'
+                  }}>
+                    <Button type='primary' size='large' onClick={() => {
+                      console.log(temp)
+                      if(temp.sourceNode) setSourceNode(temp.sourceNode)
+                      if(temp.targetNode) setTargetNode(temp.targetNode)
+                      setCurrentMenu(menuItems[1].key)
+                    }}>
+                      Find
+                    </Button>
+                  </div>
                 </div>
             }
           </div>

@@ -16,7 +16,7 @@
     padding: 20px;
     border-radius: 8px;
     position: relative;
-    width: 30%;
+    width: 20%;
     margin-bottom: 10px;
     margin-left: 10px;
     display: flex;
@@ -39,16 +39,17 @@
 
 .download-container {
     display: flex;
+    flex-direction: column;
     margin-top: 10px;
 }
 
 .note {
     color:red;
-    margin-left: 10px;
+    margin-top: 10px;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
     .popup-overlay {
         position: fixed;
         bottom: 0;

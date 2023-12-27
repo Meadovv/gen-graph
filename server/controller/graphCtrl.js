@@ -168,7 +168,7 @@ const textToGraph = (req, res) => {
   try {
     const edgeMap = new Map();
 
-    const numberArray = req.body.text.match(/\d+/g);
+    const numberArray = req.body.text.match(/-?\d+(\.\d+)?/g)
     let graphConfig = {
       numNode: 0,
       numEdge: 0,
@@ -336,10 +336,78 @@ const pathfinding = (req, res) => {
   }
 
   if (req.body.algorithm === 'bellman') {
-    return res.status(200).send({
-      success: false,
-      message: "API Work!"
-    })
+    let dist = new Array(graphData[0].numNode)
+    let parent = new Array(graphData[0].numNode)
+    let mark = new Array(graphData[0].numNode)
+
+    dist.fill(MAX)
+    parent.fill(-1)
+    mark.fill(0)
+
+    dist[req.body.source - 1] = 0
+
+    if (req.body.algorithm === 'bellman') {
+      let dist = new Array(graphData[0].numNode)
+      let parent = new Array(graphData[0].numNode)
+      let mark = new Array(graphData[0].numNode)
+
+      dist.fill(MAX)
+      parent.fill(-1)
+      mark.fill(0)
+
+      dist[req.body.source - 1] = 0
+
+      for (let i = 0; i < graphData[0].numNode - 1; ++i) {
+        for (let j = 1; j < graphData.length; ++j) {
+          let source = graphData[j].source - 1
+          let target = graphData[j].target - 1
+          let weight = graphData[j].weight
+
+          if (dist[source] + weight < dist[target] && dist[source] !== MAX) {
+            dist[target] = dist[source] + weight
+            parent[target] = source
+          }
+
+          if (dist[target] + weight < dist[source] && dist[target] !== MAX && graphData[0].graphMode === 'undirected') {
+            dist[source] = dist[target] + weight
+            parent[source] = target
+          }
+        }
+      }
+
+      let hasNegativeCycle = false;
+      for (let j = 1; j < graphData.length; ++j) {
+        let source = graphData[j].source - 1;
+        let target = graphData[j].target - 1;
+        let weight = graphData[j].weight;
+
+        if (dist[source] + weight < dist[target] && dist[source] !== MAX) {
+          hasNegativeCycle = true;
+          break;
+        }
+
+        if (dist[target] + weight < dist[source] && dist[target] !== MAX && graphData[0].graphMode === 'undirected') {
+          hasNegativeCycle = true;
+          break;
+        }
+      }
+
+      if (hasNegativeCycle) {
+        return res.status(200).send({
+          success: false,
+          message: 'Graph contains a negative cycle'
+        })
+      } else {
+        return res.status(200).send({
+          success: true,
+          result: {
+            distance: dist,
+            trace: parent,
+          },
+          message: 'Success!'
+        })
+      }
+    }
   }
 
   if (req.body.algorithm === 'floyd') {
@@ -347,32 +415,32 @@ const pathfinding = (req, res) => {
     const matrix = new Array(graphData[0].numNode)
     const parent = new Array(graphData[0].numNode)
 
-    for(let i = 0; i < graphData[0].numNode; ++i) {
+    for (let i = 0; i < graphData[0].numNode; ++i) {
       matrix[i] = new Array(graphData[0].numNode)
       parent[i] = new Array(graphData[0].numNode)
-      for(let j = 0; j < graphData[0].numNode; ++j) {
+      for (let j = 0; j < graphData[0].numNode; ++j) {
         matrix[i][j] = MAX
         parent[i][j] = MAX
       }
       matrix[i][i] = 0
     }
 
-    for(let i = 1; i < graphData.length; ++i) {
+    for (let i = 1; i < graphData.length; ++i) {
       matrix[graphData[i].source - 1][graphData[i].target - 1] = graphData[i].weight
       parent[graphData[i].source - 1][graphData[i].target - 1] = graphData[i].target
-      if(graphData[0].graphMode === 'undirected') {
+      if (graphData[0].graphMode === 'undirected') {
         matrix[graphData[i].target - 1][graphData[i].source - 1] = graphData[i].weight
         parent[graphData[i].target - 1][graphData[i].source - 1] = graphData[i].source
       }
     }
 
-    for(let k = 0; k < graphData[0].numNode; ++k)
-    for(let i = 0; i < graphData[0].numNode; ++i)
-    for(let j = 0; j < graphData[0].numNode; ++j) 
-    if(matrix[i][j] > matrix[i][k] + matrix[k][j]) {
-      matrix[i][j] = matrix[i][k] + matrix[k][j]
-      parent[i][j] = parent[i][k]
-    }
+    for (let k = 0; k < graphData[0].numNode; ++k)
+      for (let i = 0; i < graphData[0].numNode; ++i)
+        for (let j = 0; j < graphData[0].numNode; ++j)
+          if (matrix[i][j] > matrix[i][k] + matrix[k][j]) {
+            matrix[i][j] = matrix[i][k] + matrix[k][j]
+            parent[i][j] = parent[i][k]
+          }
 
     return res.status(200).send({
       success: true,
@@ -393,52 +461,92 @@ const tracePath = (req, res) => {
   const targetNode = req.body.node.targetNode - 1
   const data = req.body.data
 
-  if(algorithm === 'dijkstra') {
-    if(distance[targetNode] === MAX) {
+  let node = []
+  let edge = []
+  let resultDistance
+  const edgeMap = new Map()
+
+  if (algorithm === 'dijkstra' || algorithm === 'bellman') {
+    if (distance[targetNode] === MAX) {
       return res.status(200).send({
         success: false,
         message: 'NOT FOUND PATH'
       })
     } else {
-      let node = []
+      resultDistance = distance[targetNode]
       let currentNode = targetNode
 
-      while(currentNode !== -1) {
+      while (currentNode !== -1) {
         node.unshift(currentNode + 1)
         currentNode = parent[currentNode]
       }
-
-      const edgeMap = new Map()
-      for(let i = 0; i < node.length - 1; ++i) {
-        edgeMap.set(`${node[i]}-${node[i + 1]}`, 1)
-        if(data[0].graphMode === 'undirected') {
-          edgeMap.set(`${node[i + 1]}-${node[i]}`, 1)
-        }
-      }
-
-      let edge = []
-      for(let i = 1; i < data.length; ++i) {
-        if(edgeMap.get(`${data[i].source}-${data[i].target}`) !== undefined ) edge.push(data[i].id)
-      }
-
-      return res.status(200).send({
-        success: true,
-        distance: distance[targetNode],
-        node: node,
-        edge: edge
-      })
     }
   }
 
-  res.status(200).send({
-    success: false,
-    message: 'API WORK'
+  if (algorithm === 'floyd') {
+    if (distance[sourceNode][targetNode] === MAX) {
+      return res.status(200).send({
+        success: false,
+        message: 'NOT FOUND PATH'
+      })
+    } else {
+      resultDistance = distance[sourceNode][targetNode]
+
+      for (let i = sourceNode; i !== targetNode; i = parent[i][targetNode] - 1) node.push(i + 1)
+      node.push(targetNode + 1)
+    }
+  }
+
+  for (let i = 0; i < node.length - 1; ++i) {
+    edgeMap.set(`${node[i]}-${node[i + 1]}`, 1)
+    if (data[0].graphMode === 'undirected') {
+      edgeMap.set(`${node[i + 1]}-${node[i]}`, 1)
+    }
+  }
+
+  for (let i = 1; i < data.length; ++i) {
+    if (edgeMap.get(`${data[i].source}-${data[i].target}`) !== undefined) edge.push(data[i].id)
+  }
+
+  return res.status(200).send({
+    success: true,
+    distance: resultDistance,
+    node: node,
+    edge: edge
   })
+}
+
+const createFileContent = (req, res) => {
+
+  try {
+    const content = req.body.content
+
+    let text = ''
+
+    for (let i = 0; i < content.length; ++i) {
+      for (let j = 0; j < content[i].length; ++j) {
+        text = text + content[i][j] + ' '
+      }
+      text = text + '\n'
+    }
+
+    res.status(200).send({
+      success: true,
+      content: text,
+      message: "Downloading is starting"
+    })
+  } catch (err) {
+    res.status(200).send({
+      success: false,
+      message: err.message
+    })
+  }
 }
 
 module.exports = {
   generate,
   textToGraph,
   pathfinding,
-  tracePath
+  tracePath,
+  createFileContent
 };

@@ -57,6 +57,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 }}>
                     <Radio value='undirected'>Undirected</Radio>
                     <Radio value='directed'>Directed</Radio>
+                    <Radio value='special'>Directed Without Negative Cycle</Radio>
                 </Radio.Group>
             </div>
 
@@ -67,7 +68,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={1000} value={config.numNode} onChange={(value) => {
+                <InputNumber size='large' min={0} max={30} value={config.numNode} onChange={(value) => {
                     setConfig({
                         ...config,
                         numNode: value
@@ -102,7 +103,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 marginTop: 10
             }}>
                 <div>Weight</div>
-                <Slider range min={1} max={20} value={config.weight} style={{
+                <Slider range min={-20} max={20} value={config.weight} style={{
                     width: '50%'
                 }} onChange={(value) => {
                     setConfig({
@@ -111,12 +112,20 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                     })
                 }} />
             </div>
-
+            
             <div>
                 <Button type='primary' size='large' onClick={() => {
                     setConfig(defaultConfig)
                 }} style={{ marginRight: 10 }} >Reset</Button>
                 <Button loading={loading} type='primary' size='large' danger onClick={Generate}>Generate</Button>
+            </div>
+            
+            <div style={{
+                color: 'red',
+                marginTop: 10,
+                display: config.graphMode === 'special' ? 'flex' : 'none'
+            }}>
+                * Implementation time may take longer than usual
             </div>
         </Space>
     )
