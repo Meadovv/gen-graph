@@ -49,7 +49,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 968px) {
+@media (max-width: 1490px) {
     .popup-overlay {
         position: fixed;
         bottom: 0;

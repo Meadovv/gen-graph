@@ -7,7 +7,7 @@ dotenv.config()
 const app = express()
 
 app.use(express.json({
-   limit: '10mb'
+   limit: '50mb'
 }))
 app.use(morgan('dev'))
 

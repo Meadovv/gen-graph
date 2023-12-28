@@ -183,7 +183,7 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, targe
                   </div>
                   <div style={{
                     color: 'red',
-                    display: algorithm === algorithms[1].value ? 'flex' : 'none',
+                    display: algorithm !== algorithms[0].value ? 'flex' : 'none',
                   }}>* Weight will be replaced by its absolute value.</div>
                   <div style={{
                     display: algorithm === algorithms[2].value ? 'none' : 'flex',

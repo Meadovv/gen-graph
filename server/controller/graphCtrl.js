@@ -118,12 +118,55 @@ function shuffle(array) {
   return array;
 }
 
+const hasNegativeCycle = (graphData, source) => {
+  let dist = new Array(graphData[0].numNode)
+
+  dist.fill(MAX)
+
+  dist[source - 1] = 0
+
+  for (let i = 0; i < graphData[0].numNode - 1; ++i) {
+    for (let j = 1; j < graphData.length; ++j) {
+      let source = graphData[j].source - 1
+      let target = graphData[j].target - 1
+      let weight = graphData[j].weight
+
+      if (dist[source] + weight < dist[target] && dist[source] !== MAX) {
+        dist[target] = dist[source] + weight
+      }
+    }
+  }
+
+  let hasNegativeCycle = false;
+  for (let j = 1; j < graphData.length; ++j) {
+    let source = graphData[j].source - 1;
+    let target = graphData[j].target - 1;
+    let weight = graphData[j].weight;
+
+    if (dist[source] + weight < dist[target] && dist[source] !== MAX) {
+      hasNegativeCycle = true;
+      break;
+    }
+  }
+
+  if (hasNegativeCycle) {
+    return true
+  }
+  return false
+}
+
+const increaseWeight = (graphData) => {
+  for (let i = 1; i < graphData.length; ++i) {
+    graphData[i].weight = graphData[i].weight + 1
+  }
+}
+
 const generate = (req, res) => {
   try {
     const numNode = req.body.numNode;
     const numEdge = req.body.numEdge;
     const weight = req.body.weight;
-    const graphMode = req.body.graphMode;
+    const graphMode = req.body.graphMode.split('_')[0];
     let Count = 0;
     let fullEdge = [];
     for (let i = 0; i < numNode; ++i) {
@@ -150,6 +193,14 @@ const generate = (req, res) => {
       weight: weight,
       graphMode: graphMode,
     });
+
+    if(req.body.graphMode.split('_')[1] === 'noNegative') {
+      let source = getRndInteger(1, numNode)
+      while (hasNegativeCycle(graph, source)) {
+        increaseWeight(graph)
+      }
+    }
+
     res.status(200).send({
       success: true,
       message: "Success!",
@@ -162,7 +213,7 @@ const generate = (req, res) => {
       message: err.message,
     });
   }
-};
+}
 
 const textToGraph = (req, res) => {
   try {
@@ -284,12 +335,12 @@ const pathfinding = (req, res) => {
     for (let i = 1; i < graphData.length; ++i) {
       adj[graphData[i].source - 1].push({
         target: graphData[i].target - 1,
-        weight: graphData[i].weight
+        weight: Math.abs(graphData[i].weight)
       })
       if (graphData[0].graphMode === 'undirected') {
         adj[graphData[i].target - 1].push({
           target: graphData[i].source - 1,
-          weight: graphData[i].weight
+          weight: Math.abs(graphData[i].weight)
         })
       }
     }
@@ -342,18 +393,15 @@ const pathfinding = (req, res) => {
 
     dist.fill(MAX)
     parent.fill(-1)
-    mark.fill(0)
 
     dist[req.body.source - 1] = 0
 
     if (req.body.algorithm === 'bellman') {
       let dist = new Array(graphData[0].numNode)
       let parent = new Array(graphData[0].numNode)
-      let mark = new Array(graphData[0].numNode)
 
       dist.fill(MAX)
       parent.fill(-1)
-      mark.fill(0)
 
       dist[req.body.source - 1] = 0
 
@@ -367,11 +415,6 @@ const pathfinding = (req, res) => {
             dist[target] = dist[source] + weight
             parent[target] = source
           }
-
-          if (dist[target] + weight < dist[source] && dist[target] !== MAX && graphData[0].graphMode === 'undirected') {
-            dist[source] = dist[target] + weight
-            parent[source] = target
-          }
         }
       }
 
@@ -382,11 +425,6 @@ const pathfinding = (req, res) => {
         let weight = graphData[j].weight;
 
         if (dist[source] + weight < dist[target] && dist[source] !== MAX) {
-          hasNegativeCycle = true;
-          break;
-        }
-
-        if (dist[target] + weight < dist[source] && dist[target] !== MAX && graphData[0].graphMode === 'undirected') {
           hasNegativeCycle = true;
           break;
         }
@@ -426,10 +464,10 @@ const pathfinding = (req, res) => {
     }
 
     for (let i = 1; i < graphData.length; ++i) {
-      matrix[graphData[i].source - 1][graphData[i].target - 1] = graphData[i].weight
+      matrix[graphData[i].source - 1][graphData[i].target - 1] = Math.abs(graphData[i].weight)
       parent[graphData[i].source - 1][graphData[i].target - 1] = graphData[i].target
       if (graphData[0].graphMode === 'undirected') {
-        matrix[graphData[i].target - 1][graphData[i].source - 1] = graphData[i].weight
+        matrix[graphData[i].target - 1][graphData[i].source - 1] = Math.abs(graphData[i].weight)
         parent[graphData[i].target - 1][graphData[i].source - 1] = graphData[i].source
       }
     }

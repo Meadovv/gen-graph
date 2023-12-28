@@ -57,7 +57,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 }}>
                     <Radio value='undirected'>Undirected</Radio>
                     <Radio value='directed'>Directed</Radio>
-                    <Radio value='special'>Directed Without Negative Cycle</Radio>
+                    <Radio value='directed_noNegative'>Directed Without Negative Cycle</Radio>
                 </Radio.Group>
             </div>
 
@@ -68,7 +68,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={30} value={config.numNode} onChange={(value) => {
+                <InputNumber size='large' min={0} max={1000} value={config.numNode} onChange={(value) => {
                     setConfig({
                         ...config,
                         numNode: value
