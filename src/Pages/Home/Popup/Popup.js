@@ -115,7 +115,8 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, targe
   const downloadResult = async () => {
     await axios.post('/graph/create-file',
     {
-      content: result.result.distance
+      content: result.result.distance,
+      trace: result.result.trace
     }).then(res => {
       if(res.data.success) {
         message.success(res.data.message)

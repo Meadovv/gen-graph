@@ -234,9 +234,11 @@ const textToGraph = (req, res) => {
 
     const graph = [];
     let numEdge = 0;
+    let idx = 0;
 
     for (let i = 3; i < numberArray.length; i = i + 3) {
       graph.push({
+        id: ++idx,
         source: Number(numberArray[i]),
         target: Number(numberArray[i + 1]),
         weight: Number(numberArray[i + 2]),
@@ -558,12 +560,22 @@ const createFileContent = (req, res) => {
 
   try {
     const content = req.body.content
+    const trace = req.body.trace
 
-    let text = ''
+    let text = 'Result\n'
 
     for (let i = 0; i < content.length; ++i) {
       for (let j = 0; j < content[i].length; ++j) {
         text = text + content[i][j] + ' '
+      }
+      text = text + '\n'
+    }
+
+    text = text + 'Trace\n'
+
+    for (let i = 0; i < trace.length; ++i) {
+      for (let j = 0; j < trace[i].length; ++j) {
+        text = text + (trace[i][j] === MAX ? -1 : trace[i][j]) + ' '
       }
       text = text + '\n'
     }
