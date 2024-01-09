@@ -20,7 +20,10 @@
     "client": "react-scripts start",
     "build": "react-scripts build",
     "server": "npm run start --prefix ./server",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "app": "concurrently \"npm run server\" \"npm run client\"",
+    "install-client": "npm install",
+    "install-server": "npm install --prefix ./server",
+    "install-app": "concurrently \"npm run install-client\" \"npm run install-server\""
   },
   "eslintConfig": {
     "extends": [

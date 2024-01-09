@@ -391,7 +391,6 @@ const pathfinding = (req, res) => {
   if (req.body.algorithm === 'bellman') {
     let dist = new Array(graphData[0].numNode)
     let parent = new Array(graphData[0].numNode)
-    let mark = new Array(graphData[0].numNode)
 
     dist.fill(MAX)
     parent.fill(-1)
