@@ -1,6 +1,7 @@
 # MÔ PHỎNG MỘT SỐ THUẬT TOÁN TÌM ĐƯỜNG ĐI
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dự án này miêu tả một số thuật toán tìm đường đi với một đồ thị được tạo từ trước.
 
 ## Available Scripts
 
