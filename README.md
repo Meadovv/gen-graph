@@ -8,11 +8,11 @@ Khi bạn mới clone dự án này từ github, bạn cần chạy những lệ
 
 ### `npm run install-client`
 
-Cài đặt các thư viện liên quan cho client
+Cài đặt các thư viện liên quan cho client.
 
 ### `npm run install-server`
 
-Cài đặt các thư viện liên quan cho server
+Cài đặt các thư viện liên quan cho server.
 
 ## Các lệnh khả dụng
 
@@ -26,6 +26,6 @@ Mở [http://localhost:3000](http://localhost:3000) để xem nó trong trình d
 Trang sẽ tải lại khi bạn thực hiện thay đổi.\
 Bạn cũng có thể thấy bất kỳ lỗi nào trong console.
 
-**Lưu ý**
-Bạn phải cài đặt các thư viện liên quan dành cho cả client và server trước khi chạy câu lệnh này.
-Môi trường phát triển của bạn phải có [Nodejs](https://nodejs.org/en/download) với phiên bản tối thiểu v18.0.0
+**Lưu ý**\
+Bạn phải cài đặt các thư viện liên quan dành cho cả client và server trước khi chạy câu lệnh này.\
+Môi trường phát triển của bạn phải có [Nodejs](https://nodejs.org/en/download) với phiên bản tối thiểu v18.0.0.
