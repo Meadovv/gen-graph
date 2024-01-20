@@ -59,3 +59,10 @@ Màu của phông chữ của node, ví dụ giá trị ![#ffffff](https://place
 
 Màu của cạnh, ví dụ giá trị ![#72A0C1](https://placehold.co/15x15/72A0C1/72A0C1.png) `#72A0C1`
 
+### `LINK_IN_PATH_COLOR: "#FF4500"`
+
+Màu của cạnh trong đường đi ngắn nhất, ví dụ giá trị ![#FF4500](https://placehold.co/15x15/FF4500/FF4500.png) `#FF4500`
+
+### `LINK_LABEL_FONT_COLOR: "#000000"`
+
+Màu phông chữ của cạnh, ví dụ giá trị ![#000000](https://placehold.co/15x15/000000/000000.png) `#000000`
