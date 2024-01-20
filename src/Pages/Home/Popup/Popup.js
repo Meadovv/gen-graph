@@ -89,7 +89,7 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, targe
       return
     }
     setResult(null)
-    await axios.post('/graph/pathfinding',
+    await axios.post('/api/v1/graph/pathfinding',
       {
         algorithm: algorithm,
         source: sourceNode,
@@ -113,7 +113,7 @@ const Popup = ({ openModal, setOpenModal, data, sourceNode, setSourceNode, targe
   }
 
   const downloadResult = async () => {
-    await axios.post('/graph/create-file',
+    await axios.post('/api/v1/graph/create-file',
     {
       content: result.result.distance,
       trace: result.result.trace

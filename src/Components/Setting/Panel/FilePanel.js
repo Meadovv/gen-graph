@@ -20,7 +20,7 @@ export default function FilePanel({ data, setData, active }) {
   const importData = async (text) => {
     setLoading(false);
     axios
-      .post("/graph/text-to-graph", {
+      .post("/api/v1/graph/text-to-graph", {
         text: text,
       })
       .then((res) => {

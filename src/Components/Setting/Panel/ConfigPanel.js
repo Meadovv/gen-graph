@@ -17,7 +17,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
 
     const Generate = async () => {
         setLoading(true)
-        await axios.post('/graph/generate',
+        await axios.post('/api/v1/graph/generate',
             {
                 numNode: config.numNode,
                 numEdge: config.numEdge,

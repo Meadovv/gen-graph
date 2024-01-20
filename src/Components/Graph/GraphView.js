@@ -22,7 +22,7 @@ export default function GraphView({ data, sourceNode, setSourceNode, targetNode,
 
   const getTrace = async () => {
     if(!sourceNode || !targetNode) return
-    await axios.post('/graph/trace',
+    await axios.post('/api/v1/graph/trace',
     {
       data: data,
       result: result,

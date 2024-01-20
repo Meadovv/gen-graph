@@ -33,7 +33,7 @@ export default function DataPanel({ active, data, setData, setDisableMenu }) {
     if (enableEdit) {
       setLoading(true);
       await axios
-        .post("/graph/text-to-graph", {
+        .post("/api/v1/graph/text-to-graph", {
           text: textData,
         })
         .then((res) => {

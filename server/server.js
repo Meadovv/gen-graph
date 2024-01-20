@@ -22,6 +22,6 @@ app.get('/', (req, res) => {
    })
 })
 
-app.listen(process.env.SERVER_PORT, () => {
-   console.log(`>>> Log: Server is running in ${process.env.NODE_MODE} Mode on PORT: ${process.env.SERVER_PORT}`);
+app.listen(process.env.SERVER_PORT || 8080, () => {
+   console.log(`>>> Log: Server is running in ${process.env.NODE_MODE} Mode on PORT: ${process.env.SERVER_PORT || 8080}`);
 })
