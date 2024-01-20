@@ -1,6 +1,7 @@
 import { Radio, InputNumber, Space, Slider, Button, message } from 'antd'
 import { useState } from 'react'
 import axios from 'axios';
+import CONFIG from '../../../Config/config'
 
 const defaultConfig = {
     numNode: 5,
@@ -68,7 +69,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 marginTop: 10
             }}>
                 <div>Number of Node</div>
-                <InputNumber size='large' min={0} max={1000} value={config.numNode} onChange={(value) => {
+                <InputNumber size='large' min={CONFIG.graph.global.NODE_NUMBER_RANGE.MIN} max={CONFIG.graph.global.NODE_NUMBER_RANGE.MAX} value={config.numNode} onChange={(value) => {
                     setConfig({
                         ...config,
                         numNode: value
@@ -103,7 +104,7 @@ export default function ConfigPanel({ setData, active, setOpenDrawer }) {
                 marginTop: 10
             }}>
                 <div>Weight</div>
-                <Slider range min={-20} max={20} value={config.weight} style={{
+                <Slider range min={CONFIG.graph.global.WEIGHT_RANGE.MIN} max={CONFIG.graph.global.WEIGHT_RANGE.MAX} value={config.weight} style={{
                     width: '50%'
                 }} onChange={(value) => {
                     setConfig({

@@ -6,7 +6,7 @@ const {
    pathfinding,
    tracePath,
    createFileContent
-} = require('../controller/graphCtrl')
+} = require('../../controller/v1/graph.controller')
 
 const router = express.Router()
 

@@ -12,7 +12,7 @@ app.use(express.json({
 app.use(morgan('dev'))
 
 
-app.use('/graph', require('./routers/graphRoute'))
+app.use('/api/v1/', require('./routers/v1/router'))
 
 
 app.get('/', (req, res) => {

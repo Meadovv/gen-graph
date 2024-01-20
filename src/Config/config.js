@@ -21,6 +21,14 @@ const config = {
         },
         global: {
             FIT_VIEW: false,
+            NODE_NUMBER_RANGE: {
+                MIN: 1,
+                MAX: 1000
+            },
+            WEIGHT_RANGE: {
+                MIN: -20,
+                MAX: 20
+            }
         }
     },
 };

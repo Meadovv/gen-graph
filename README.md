@@ -29,3 +29,12 @@ Bạn cũng có thể thấy bất kỳ lỗi nào trong console.
 **Lưu ý**\
 Bạn phải cài đặt các thư viện liên quan dành cho cả client và server trước khi chạy câu lệnh này.\
 Môi trường phát triển của bạn phải có [Nodejs](https://nodejs.org/en/download) với phiên bản tối thiểu v18.0.0.
+
+## Cấu hình dự án
+
+Bạn hãy tìm tới file config.js với đường dẫn ./src/Config/config.js\
+Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
+
+### `NODE_COLOR: "#00308F"`
+
+Màu của node, ví dụ giá trị [#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
