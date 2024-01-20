@@ -35,6 +35,59 @@ Môi trường phát triển của bạn phải có [Nodejs](https://nodejs.org/
 Bạn hãy tìm tới file config.js với đường dẫn ./src/Config/config.js\
 Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
 
+### Các cấu hình chính
+
+### `FIT_VIEW: true`
+
+Khớp đồ thị vào màn hình. Ví dụ giá trị: `true`
+
+### `
+    NODE_NUMBER_RANGE: {
+        MIN: 1,
+        MAX: 1000
+    }
+`
+
+Giá trị lớn nhất và nhỏ nhất của số node của đồ thị.
+
+### `
+    WEIGHT_NUMBER_RANGE: {
+        MIN: -20,
+        MAX: 20
+    }
+`
+
+Giá trị lớn nhất và nhỏ nhất của trọng số của cạnh
+
+### `FIT_VIEW: true`
+
+Khớp đồ thị vào màn hình. Ví dụ giá trị: `true`
+
+
+### Các cấu hình về hình ảnh
+
+### `NODE_SIZE: 6`
+
+Độ lớn của node. Ví dụ giá trị: `6`
+
+### `NODE_LABEL_FONT_SIZE: 16`
+
+Độ lớn phông của tên node. Ví dụ giá trị: `16`
+
+### `LINK_WIDTH: 1`
+
+Độ rộng của cạnh. Ví dụ giá trị: `1`
+
+### `LINK_LABEL_FONT_SIZE: 16`
+
+Độ lớn phông của trọng số cạnh. Ví dụ giá trị: `16`
+
+### `DISTANCE_FROM_LABEL_AND_LINK: 3`
+
+Khoảng cách giữa trọng số và cạnh. Ví dụ giá trị: `3`
+
+### Các cấu hình màu sắc
+
 ### `NODE_COLOR: "#00308F"`
 
 Màu của node, ví dụ giá trị ![#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
@@ -49,7 +102,7 @@ Màu của node bắt đầu, ví dụ giá trị ![#006A4E](https://placehold.c
 
 ### `TARGET_NODE_COLOR: "#AA0000"`
 
-Màu của node bắt đầu, ví dụ giá trị ![#AA0000](https://placehold.co/15x15/AA0000/AA0000.png) `#AA0000`
+Màu của node kết thúc, ví dụ giá trị ![#AA0000](https://placehold.co/15x15/AA0000/AA0000.png) `#AA0000`
 
 ### `NODE_LABEL_FONT_COLOR: "#ffffff"`
 
@@ -66,3 +119,4 @@ Màu của cạnh trong đường đi ngắn nhất, ví dụ giá trị ![#FF45
 ### `LINK_LABEL_FONT_COLOR: "#000000"`
 
 Màu phông chữ của cạnh, ví dụ giá trị ![#000000](https://placehold.co/15x15/000000/000000.png) `#000000`
+
