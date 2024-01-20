@@ -22,8 +22,7 @@
     "server": "npm run start --prefix ./server",
     "app": "concurrently \"npm run server\" \"npm run client\"",
     "install-client": "npm install",
-    "install-server": "npm install --prefix ./server",
-    "install-app": "concurrently \"npm run install-client\" \"npm run install-server\""
+    "install-server": "npm install --prefix ./server"
   },
   "eslintConfig": {
     "extends": [
