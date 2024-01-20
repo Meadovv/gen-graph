@@ -14,7 +14,7 @@ Cài đặt các thư viện liên quan cho client
 
 Cài đặt các thư viện liên quan cho server
 
-## Các lệnh khả dụng
+### Các lệnh khả dụng
 
 Trong thư mục dự án, bạn có thể chạy:
 
