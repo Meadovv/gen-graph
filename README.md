@@ -6,11 +6,13 @@ Dự án này mô tả một số thuật toán tìm đường đi ngắn nhất
 
 Khi bạn mới clone dự án này từ github, bạn cần chạy những lệnh sau trong thư mục dự án:
 
-### `npm run install-client`
+### 
+    npm run install-client
 
 Cài đặt các thư viện liên quan cho client.
 
-### `npm run install-server`
+### 
+    npm run install-server
 
 Cài đặt các thư viện liên quan cho server.
 
@@ -18,7 +20,8 @@ Cài đặt các thư viện liên quan cho server.
 
 Trong thư mục dự án, bạn có thể chạy:
 
-### `npm run app`
+### 
+    npm run app
 
 Chạy ứng dụng ở chế độ phát triển.\
 Mở [http://localhost:3000](http://localhost:3000) để xem nó trong trình duyệt của bạn.
@@ -37,7 +40,8 @@ Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
 
 ### Các cấu hình chính
 
-### `FIT_VIEW: true`
+###
+    FIT_VIEW: true
 
 Khớp đồ thị vào màn hình. Ví dụ giá trị: `true`
 
@@ -57,64 +61,78 @@ Giá trị lớn nhất và nhỏ nhất của số node của đồ thị.
 
 Giá trị lớn nhất và nhỏ nhất của trọng số của cạnh
 
-### `FIT_VIEW: true`
+### 
+    FIT_VIEW: true
 
 Khớp đồ thị vào màn hình. Ví dụ giá trị: `true`
 
 
 ### Các cấu hình về hình ảnh
 
-### `NODE_SIZE: 6`
+### 
+    NODE_SIZE: 6
 
 Độ lớn của node. Ví dụ giá trị: `6`
 
-### `NODE_LABEL_FONT_SIZE: 16`
+### 
+    NODE_LABEL_FONT_SIZE: 16
 
 Độ lớn phông của tên node. Ví dụ giá trị: `16`
 
-### `LINK_WIDTH: 1`
+### 
+    LINK_WIDTH: 1
 
 Độ rộng của cạnh. Ví dụ giá trị: `1`
 
-### `LINK_LABEL_FONT_SIZE: 16`
+### 
+    LINK_LABEL_FONT_SIZE: 16
 
 Độ lớn phông của trọng số cạnh. Ví dụ giá trị: `16`
 
-### `DISTANCE_FROM_LABEL_AND_LINK: 3`
+### 
+    DISTANCE_FROM_LABEL_AND_LINK: 3
 
 Khoảng cách giữa trọng số và cạnh. Ví dụ giá trị: `3`
 
 ### Các cấu hình màu sắc
 
-### `NODE_COLOR: "#00308F"`
+### 
+    NODE_COLOR: "#00308F"
 
 Màu của node, ví dụ giá trị ![#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
 
-### `NODE_IN_PATH_COLOR: "#FF7F50"`
+###
+    NODE_IN_PATH_COLOR: "#FF7F50"
 
 Màu của các node trên đường đi ngắn nhất, ví dụ giá trị ![#FF7F50](https://placehold.co/15x15/FF7F50/FF7F50.png) `#FF7F50`
 
-### `SOURCE_NODE_COLOR: "#006A4E"`
+###
+    SOURCE_NODE_COLOR: "#006A4E"
 
 Màu của node bắt đầu, ví dụ giá trị ![#006A4E](https://placehold.co/15x15/006A4E/006A4E.png) `#006A4E`
 
-### `TARGET_NODE_COLOR: "#AA0000"`
+###
+    TARGET_NODE_COLOR: "#AA0000"
 
 Màu của node kết thúc, ví dụ giá trị ![#AA0000](https://placehold.co/15x15/AA0000/AA0000.png) `#AA0000`
 
-### `NODE_LABEL_FONT_COLOR: "#ffffff"`
+###
+    NODE_LABEL_FONT_COLOR: "#ffffff"
 
 Màu của phông chữ của node, ví dụ giá trị ![#ffffff](https://placehold.co/15x15/ffffff/ffffff.png) `#ffffff`
 
-### `LINK_COLOR: "#72A0C1"`
+###
+    LINK_COLOR: "#72A0C1"
 
 Màu của cạnh, ví dụ giá trị ![#72A0C1](https://placehold.co/15x15/72A0C1/72A0C1.png) `#72A0C1`
 
-### `LINK_IN_PATH_COLOR: "#FF4500"`
+###
+    LINK_IN_PATH_COLOR: "#FF4500"
 
 Màu của cạnh trong đường đi ngắn nhất, ví dụ giá trị ![#FF4500](https://placehold.co/15x15/FF4500/FF4500.png) `#FF4500`
 
-### `LINK_LABEL_FONT_COLOR: "#000000"`
+###
+    LINK_LABEL_FONT_COLOR: "#000000"
 
 Màu phông chữ của cạnh, ví dụ giá trị ![#000000](https://placehold.co/15x15/000000/000000.png) `#000000`
 
