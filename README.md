@@ -41,21 +41,19 @@ Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
 
 Khớp đồ thị vào màn hình. Ví dụ giá trị: `true`
 
-### `
+###
     NODE_NUMBER_RANGE: {
         MIN: 1,
         MAX: 1000
     }
-`
 
 Giá trị lớn nhất và nhỏ nhất của số node của đồ thị.
 
-### `
+###
     WEIGHT_NUMBER_RANGE: {
         MIN: -20,
         MAX: 20
     }
-`
 
 Giá trị lớn nhất và nhỏ nhất của trọng số của cạnh
 
