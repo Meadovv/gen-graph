@@ -50,3 +50,12 @@ Màu của node bắt đầu, ví dụ giá trị ![#006A4E](https://placehold.c
 ### `TARGET_NODE_COLOR: "#AA0000"`
 
 Màu của node bắt đầu, ví dụ giá trị ![#AA0000](https://placehold.co/15x15/AA0000/AA0000.png) `#AA0000`
+
+### `NODE_LABEL_FONT_COLOR: "#ffffff"`
+
+Màu của phông chữ của node, ví dụ giá trị ![#ffffff](https://placehold.co/15x15/ffffff/ffffff.png) `#ffffff`
+
+### `LINK_COLOR: "#72A0C1"`
+
+Màu của cạnh, ví dụ giá trị ![#72A0C1](https://placehold.co/15x15/72A0C1/72A0C1.png) `#72A0C1`
+
