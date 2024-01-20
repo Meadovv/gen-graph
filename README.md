@@ -38,3 +38,15 @@ Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
 ### `NODE_COLOR: "#00308F"`
 
 Màu của node, ví dụ giá trị ![#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
+
+### `NODE_IN_PATH_COLOR: "#FF7F50"`
+
+Màu của các node trên đường đi ngắn nhất, ví dụ giá trị ![#FF7F50](https://placehold.co/15x15/FF7F50/FF7F50.png) `#FF7F50`
+
+### `SOURCE_NODE_COLOR: "#006A4E"`
+
+Màu của node bắt đầu, ví dụ giá trị ![#006A4E](https://placehold.co/15x15/006A4E/006A4E.png) `#006A4E`
+
+### `TARGET_NODE_COLOR: "#AA0000"`
+
+Màu của node bắt đầu, ví dụ giá trị ![#AA0000](https://placehold.co/15x15/AA0000/AA0000.png) `#AA0000`
