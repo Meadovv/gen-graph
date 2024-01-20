@@ -24,6 +24,8 @@ Chạy ứng dụng ở chế độ phát triển.\
 Mở [http://localhost:3000](http://localhost:3000) để xem nó trong trình duyệt của bạn.
 
 Trang sẽ tải lại khi bạn thực hiện thay đổi.\
-Bạn cũng có thể thấy bất kỳ lỗi lint nào trong console.
+Bạn cũng có thể thấy bất kỳ lỗi nào trong console.
 
-**Lưu ý rằng, bạn đã cài đặt các thư viện liên quan cho cả client và server.**
+**Lưu ý**
+Bạn phải cài đặt các thư viện liên quan dành cho cả client và server trước khi chạy câu lệnh này.
+Môi trường phát triển của bạn phải có Nodejs với phiên bản tối thiểu v18.0.0
