@@ -28,4 +28,4 @@ Bạn cũng có thể thấy bất kỳ lỗi nào trong console.
 
 **Lưu ý**
 Bạn phải cài đặt các thư viện liên quan dành cho cả client và server trước khi chạy câu lệnh này.
-Môi trường phát triển của bạn phải có Nodejs với phiên bản tối thiểu v18.0.0
+Môi trường phát triển của bạn phải có [Nodejs](https://nodejs.org/en/download) với phiên bản tối thiểu v18.0.0
