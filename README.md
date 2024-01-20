@@ -37,4 +37,4 @@ Tại đây, bạn có thể chỉnh sửa một số cấu hình sau:
 
 ### `NODE_COLOR: "#00308F"`
 
-Màu của node, ví dụ giá trị [#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
+Màu của node, ví dụ giá trị ![#00308F](https://placehold.co/15x15/00308F/00308F.png) `#00308F`
